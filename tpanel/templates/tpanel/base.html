@@ -1,12 +1,21 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
+    {% block head %}
+
+    {% if title %}
+    <title>ПРОЕКТ - {{title}}</title>
+    {% else %}
+    <title>ПРОЕКТ</title>
+    {% endif %}
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>TPanel</title>
+
+    {% endblock %}
 </head>
 <body>
     <nav class="sidebar close">
@@ -25,28 +34,29 @@
             <div class="menu">
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="/">
+                        <button data-page="/?not_reload=true" class="pages">
                             <i class='bx bx-home-alt icon' ></i>
                             <span class="text nav-text">Главная</span>
-                        </a>
+                        </button>
                     </li>
                     <li class="nav-link">
-                        <a href="#">
+                        <button data-page="notifications?not_reload=true" class="pages">
                             <i class='bx bx-bell icon'></i>
                             <span class="text nav-text">Уведомления</span>
-                        </a>
+                        </button>
                     </li>
                     <li class="nav-link">
-                        <a href="#">
+                        <button data-page="tasks?not_reload=true" class="pages">
                             <i class='bx bxs-copy-alt icon' ></i>
                             <span class="text nav-text">Мои задания</span>
-                        </a>
+                        </button>
                     </li>
                     <li class="nav-link">
-                        <a href="#">
+                        <button data-page="mail?not_reload=true" class="pages">
                             <i class='bx bx-envelope icon'></i>
                             <span class="text nav-text">Почта</span>
-                        </a>
+                        </button>
+                        {#                        <a href="#"></a>#}
                     </li>
                 </ul>
             </div>
@@ -73,9 +83,13 @@
             </div>
         </div>
     </nav>
-    <section class="home">
-        <div class="text">Тест</div>
-    </section>
-    <script src="{% static 'js/main.js' %}"></script>
+    <main class="home" id="content">
+        {% block content %}
+        {% endblock %}
+        {{ content }}
+    </main>
+    {% block scripts %}
+        <script src="{% static 'js/main.js' %}"></script>
+    {% endblock %}
 </body>
 </html>

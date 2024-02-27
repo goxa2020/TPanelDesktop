@@ -163,8 +163,10 @@ body.dark .sidebar header .toggle{
     font-weight: 500;
     transition: var(--tran-05);
 }
-.sidebar li a{
+.sidebar li a,
+.sidebar li button{
     list-style: none;
+    border: none;
     height: 100%;
     background-color: transparent;
     display: flex;
@@ -174,11 +176,14 @@ body.dark .sidebar header .toggle{
     text-decoration: none;
     transition: var(--tran-03);
 }
-.sidebar li a:hover{
+.sidebar li a:hover,
+.sidebar li button:hover{
     background-color: var(--primary-color);
 }
 .sidebar li a:hover .icon,
-.sidebar li a:hover .text{
+.sidebar li a:hover .text,
+.sidebar li button:hover .icon,
+.sidebar li button:hover .text{
     color: var(--sidebar-color);
 }
 body.dark .sidebar li a:hover .icon,
