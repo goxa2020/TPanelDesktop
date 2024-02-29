@@ -11,28 +11,32 @@ modeSwitch.addEventListener("click" , () =>{
 });
 
 function store(value){
+    console.log(value)
     localStorage.setItem('darkmode', value);
 }
 
 
-const darkmode = localStorage.getItem('darkmode');
+function checkTheme() {
 
-if(darkmode === null) {
-    store('false');
-} else if(darkmode === 'true' && !body.classList.contains('dark')) {
-    body.classList.add("dark");
-} else if(darkmode === 'false' && body.classList.contains('dark')) {
-    body.classList.remove("dark");
+    const darkmode = localStorage.getItem('darkmode');
+    console.log(darkmode)
+    if (darkmode === null) {
+        store('false');
+    } else if (darkmode === 'true' && !body.classList.contains('dark')) {
+        body.classList.add("dark");
+    } else if (darkmode === 'false' && body.classList.contains('dark')) {
+        body.classList.remove("dark");
+    }
 }
-
-
+checkTheme()
 function showPage(page) {
     fetch(`${page}`)
     .then(response => response.text())
     .then(text => {
-        document.querySelector('#content').innerHTML = text;
-        // document.querySelector('html').innerHTML = text;
-        // $('html').html(text);
+        // document.querySelector('#content').innerHTML = text;
+        document.querySelector('html').innerHTML = text;
+        // document.write(text);
+        checkTheme()
     });
 
 }
