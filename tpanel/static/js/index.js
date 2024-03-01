@@ -1,3 +1,27 @@
+const navigateTo = url => {
+    history.pushState(null, null, url);
+    router();
+}
+
+const router = async () => {
+    const routes = [
+        { path: "/", view: () => console.log('main')},
+        { path: "/notifications", view: () => console.log('notifications')},
+        { path: "/tasks", view: () => console.log('tasks')},
+        { path: "/mail", view: () => console.log('mail')}
+    ];
+    const potentialMatches = routes.map(route => {
+       return {
+           route: route,
+           isMatch: location.pathname === route.path
+       };
+    });
+
+    let match = potentialMatches.find(potentialMatches => potentialMatches.isMatch);
+
+    match.route.view();
+}
+
 const body = document.querySelector('body'),
       sidebar = body.querySelector('nav'),
       toggle = body.querySelector(".toggle"),
@@ -11,7 +35,6 @@ modeSwitch.addEventListener("click" , () =>{
 });
 
 function store(value){
-    console.log(value)
     localStorage.setItem('darkmode', value);
 }
 
@@ -19,7 +42,6 @@ function store(value){
 function checkTheme() {
 
     const darkmode = localStorage.getItem('darkmode');
-    console.log(darkmode)
     if (darkmode === null) {
         store('false');
     } else if (darkmode === 'true' && !body.classList.contains('dark')) {
@@ -41,13 +63,15 @@ function showPage(page) {
 
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.pages').forEach(button => {
-        button.onclick = function() {
-            showPage(this.dataset.page)
-            console.log('смена страницы');
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.addEventListener('click', e => {
+        if (e.target.matches("[data-link]")) {
+            e.preventDefault();
+            navigateTo(e.target.href);
+            console.log('click to go');
         }
     })
+    router();
 });
 
 console.log('JS подгружен');
