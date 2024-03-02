@@ -4,16 +4,23 @@
 <head>
     {% block head %}
 
-    {% if title %}
-    <title>ПРОЕКТ - {{title}}</title>
-    {% else %}
-    <title>ПРОЕКТ</title>
-    {% endif %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% if title %}
+            <title>ПРОЕКТ - {{title}}</title>
+        {% else %}
+            <title>ПРОЕКТ</title>
+        {% endif %}
+
+        <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% block favicons %}
+            <link rel="manifest" href="{% static 'icons/main_favicons/site.webmanifest' %}">
+            <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/main_favicons/apple-touch-icon.png' %}">
+            <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/main_favicons/favicon-32x32.png' %}">
+            <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/main_favicons/favicon-16x16.png' %}">
+        {% endblock %}
 
     {% endblock %}
 </head>
@@ -38,8 +45,8 @@
 {#                            <i class='bx bx-home-alt icon' ></i>#}
 {#                            <span class="text nav-text">Главная</span>#}
 {#                        </button>#}
-                        <a href="/" data-link>
-                            <i class='bx bx-home-alt icon' ></i>
+                        <a href="/" class="link">
+                            <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Главная</span>
                         </a>
                     </li>
@@ -48,9 +55,9 @@
 {#                            <i class='bx bx-bell icon'></i>#}
 {#                            <span class="text nav-text">Уведомления</span>#}
 {#                        </button>#}
-                        <a href="notifications" data-link>
-                            <i class='bx bx-bell icon'></i>
-                            <span class="text nav-text">Уведомления</span>
+                        <a href="notifications" class="link">
+                            <i class='bx bx-bell icon' data-link></i>
+                            <span class="text nav-text" data-link>Уведомления</span>
                         </a>
                     </li>
                     <li class="nav-link">
@@ -58,9 +65,9 @@
 {#                            <i class='bx bxs-copy-alt icon' ></i>#}
 {#                            <span class="text nav-text">Мои задания</span>#}
 {#                        </button>#}
-                        <a href="tasks" data-link>
-                            <i class='bx bxs-copy-alt icon' ></i>
-                            <span class="text nav-text">Мои задания</span>
+                        <a href="tasks" class="link">
+                            <i class='bx bxs-copy-alt icon' data-link></i>
+                            <span class="text nav-text" data-link>Мои задания</span>
                         </a>
                     </li>
                     <li class="nav-link">
@@ -68,9 +75,9 @@
 {#                            <i class='bx bx-envelope icon'></i>#}
 {#                            <span class="text nav-text">Почта</span>#}
 {#                        </button>#}
-                        <a href="mail" data-link>
-                            <i class='bx bx-envelope icon'></i>
-                            <span class="text nav-text">Почта</span>
+                        <a href="mail" class="link">
+                            <i class='bx bx-envelope icon' data-link></i>
+                            <span class="text nav-text" data-link>Почта</span>
                         </a>
                     </li>
                 </ul>
@@ -103,7 +110,15 @@
         {% endblock %}
     </main>
     {% block scripts %}
-        <script src="{% static 'js/index.js' %}"></script>
+        <script src="{% static 'js/SPA.js' %}"></script>
+        <script src="{% static 'js/themes.js' %}"></script>
+        <script>
+            var sidebar = body.querySelector('nav'),
+                  toggle = body.querySelector(".toggle");
+            toggle.addEventListener("click" , () =>{
+                sidebar.classList.toggle("close");
+            })
+        </script>
     {% endblock %}
 </body>
 </html>

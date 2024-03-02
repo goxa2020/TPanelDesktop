@@ -1,20 +1,15 @@
 from django.shortcuts import render
-# from django.template.loader import render_to_string
+from django.template.loader import render_to_string
 # from django.http import HttpResponse, Http404
 
 
 def main(request):
-    if request.GET.get('not_reload'):
-        return render(request, 'tpanel/main.html')
+
     return render(request, 'tpanel/main.html')
-    # return render(request, 'tpanel/base.html', {'content': render_to_string('tpanel/main.html')})
 
 
 def mail(request):
-    if request.GET.get('not_reload'):
-        return render(request, 'tpanel/mail.html')
-    return render(request, 'tpanel/mail.html')
-    # return render(request, 'tpanel/base.html', {'content': render_to_string('tpanel/mail.html')})
+    return render(request, 'tpanel/mail.html', {'title': 'почта'})
 
 
 def not_found(request, page):
