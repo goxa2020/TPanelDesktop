@@ -3,5 +3,13 @@
     {{ block.super }}
 {% endblock %}
 {% block content %}
-    <div class="text">Тест</div>
+    <div class="text">
+        {% if user.is_authenticated %}
+
+            Здравствуйте, {{ user.first_name }}
+
+        {% else %}
+            Тест
+        {% endif %}
+    </div>
 {% endblock %}

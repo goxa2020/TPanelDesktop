@@ -3,8 +3,10 @@ var body = document.querySelector('body'),
 
 // переход к какой-то странице
 var navigateTo = url => {
+    // добавляем переход в историю
     history.pushState(null, null, url);
-    router();
+    // запрашиваем данные с сервера
+    SendRequest('get', location.pathname, 'not_update', showPage);
 }
 
 // создание запроса
@@ -99,33 +101,9 @@ function SendRequest(r_method, r_path, r_args, r_handler)
     }
 }
 
-// вызывается при каждом переходе по страницам
-var router = async () => {
-    // возможные пути
-    const routes = [
-        { path: "/", view: () => console.log('main')},
-        { path: "/notifications", view: () => console.log('notifications')},
-        { path: "/tasks", view: () => console.log('tasks')},
-        { path: "/mail", view: () => console.log('mail')}
-    ];
-
-    const potentialMatches = routes.map(route => {
-       return {
-           route: route,
-           isMatch: location.pathname === route.path
-       };
-    });
-
-    // текущий путь
-    let match = potentialMatches.find(potentialMatches => potentialMatches.isMatch);
-
-    // Отправляем запрос по нужному пути и передаем в обработчик
-    SendRequest('get', match.route.path, 'not_update', showPage);
-};
 
 // показ новой страницы
 function showPage(page) {
-    sidebar.classList.toggle("close");
     const newHTML = document.open("text/html", "replace");
     newHTML.write(page.response);
     newHTML.close();
@@ -133,7 +111,7 @@ function showPage(page) {
 
 // кнопочка назад
 window.addEventListener("popstate", () => {
-    router();
+    SendRequest('get', location.pathname, 'not_update', showPage);
 });
 
 // при загрузке страницы

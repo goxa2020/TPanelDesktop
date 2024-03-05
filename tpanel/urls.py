@@ -5,5 +5,7 @@ from . import views
 urlpatterns = [
     path('', views.main),
     path('mail', views.mail),
-    path('<page>', views.not_found),
+    path('tasks', views.tasks),
+    path('notifications', views.notifications),
+    path('<path:page>', views.not_found)
 ]
