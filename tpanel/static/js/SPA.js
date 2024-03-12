@@ -1,5 +1,5 @@
 var body = document.querySelector('body'),
-      nav_links = body.querySelectorAll(".link");
+    SPA_links = body.querySelectorAll(".SPA");
 
 // переход к какой-то странице
 var navigateTo = url => {
@@ -80,15 +80,15 @@ function SendRequest(r_method, r_path, r_args, r_handler)
         if (r_args) {
             r_path += "?" + r_args;
         }
-        //Инициализируем соединение
-        Request.open(r_method, r_path, true);
     }
+    //Инициализируем соединение
+    Request.open(r_method, r_path, true);
 
     if (r_method.toLowerCase() === "post")
     {
         //Если это POST-запрос
         //устанавливаем заголовок
-        Request.setRequestHeader("Content-Type","application/x-www-form-urlencoded; charset=utf-8");
+        Request.setRequestHeader('X-CSRFToken', Array.from(r_args.entries())[0][1]);
         //Посылаем запрос
         Request.send(r_args);
     }
@@ -116,12 +116,28 @@ window.addEventListener("popstate", () => {
 
 // при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
-    nav_links.forEach((link) => {
+    SPA_links.forEach((link) => {
         link.addEventListener('click', e => {
-            // отменить стандартное действие ссылки
+            console.log(link.tagName)
+            // отменить стандартное действие элемента
             e.preventDefault();
-            // перейти на страницу
-            navigateTo(link.href);
+            if (link.tagName === 'A') {
+                // перейти на страницу
+                navigateTo(link.href);
+            }
+            if (link.tagName === 'BUTTON') {
+                // const Form = document.getElementById('profile-form');
+                const Form = link.parentElement;
+                const data = new FormData(Form);
+                const data_arr = Array.from(data.entries())
+                console.log(data_arr)
+                console.log('переход по кнопке')
+                console.log(data_arr.at(-1)[1])
+                console.log('сюда')
+                history.pushState(null, null, data_arr.at(-1)[1]);
+
+                SendRequest('post', Form.action, data, showPage);
+            }
         })
     })
 });

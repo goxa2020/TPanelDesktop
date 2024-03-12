@@ -111,9 +111,16 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
+DATE_INPUT_FORMATS = ['%d.%m.%Y']
+
+LOGIN_URL = '/accounts/login/'
+
 USE_I18N = True
 
 USE_TZ = True
+
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 
 
 # Static files (CSS, JavaScript, Images)

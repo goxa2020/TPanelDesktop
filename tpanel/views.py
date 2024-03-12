@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
+# from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
+from .forms import UserForm, ProfileForm
 # from django.http import HttpResponse, Http404
 
 
@@ -24,11 +26,28 @@ def notifications(request):
     return render(request, 'tpanel/notifications.html', {'title': 'уведомления'})
 
 
-def login(request):
-    # if user:
-    #     redirect()
-    return render(request, 'tpanel/templates/registration/login.html', {'title': 'авторизация'})
-
-
 def not_found(request, page):
     return render(request, 'tpanel/not_found.html', {'page': page})
+
+
+@login_required
+@transaction.atomic
+def profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user.profile)
+        print('проверка')
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            print('валид')
+            return redirect('/profile')
+        else:
+            print('невалид')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+    return render(request, 'registration/profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })

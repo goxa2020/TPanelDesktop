@@ -39,38 +39,38 @@
             <div class="menu">
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="/" class="link">
+                        <a href="/" class="SPA">
                             <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Главная</span>
                         </a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-link">
-                        <a href="notifications" class="link">
-                            <i class='bx bx-bell icon' data-link></i>
-                            <span class="text nav-text" data-link>Уведомления</span>
+                        <a href="notifications" class="SPA">
+                            <i class='bx bx-bell icon'></i>
+                            <span class="text nav-text">Уведомления</span>
                         </a>
                     </li>
-                    {% if user|has_group:'Student' %}
+                    {% if user|is_student %}
                     <li class="nav-link">
-                        <a href="tasks" class="link">
-                            <i class='bx bxs-copy-alt icon' data-link></i>
-                            <span class="text nav-text" data-link>Мои задания</span>
+                        <a href="tasks" class="SPA">
+                            <i class='bx bxs-copy-alt icon'></i>
+                            <span class="text nav-text">Мои задания</span>
                         </a>
                     </li>
                     {% endif %}
                     <li class="nav-link">
-                        <a href="mail" class="link">
-                            <i class='bx bx-envelope icon' data-link></i>
-                            <span class="text nav-text" data-link>Почта</span>
+                        <a href="mail" class="SPA">
+                            <i class='bx bx-envelope icon'></i>
+                            <span class="text nav-text">Почта</span>
                         </a>
                     </li>
                     {% endif %}
                     {% if user.is_staff %}
                     <li class="nav-link">
-                        <a href="/admin/" class="link">
-                            <i class='bx bx-code-alt icon' data-link></i>
-                            <span class="text nav-text" data-link>Админка</span>
+                        <a href="/admin/">
+                            <i class='bx bx-code-alt icon'></i>
+                            <span class="text nav-text">Админка</span>
                         </a>
                     </li>
                     {% endif %}
@@ -80,9 +80,16 @@
                 <ul>
                     {% if user.is_authenticated %}
                     <li class="nav-link">
+                        <a href="/profile" class="SPA">
+                            <i class='bx bx-user icon'></i>
+                            <span class="text nav-text">Профиль</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
                         <form action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
-                            <button type="submit">
+                            <input type="hidden" name="next" value="{{ next }}" />
+                            <button type="submit" class="SPA">
                                 <i class='bx bx-log-out icon' ></i>
                                 <span class="text nav-text">Выйти</span>
                             </button>
@@ -90,7 +97,7 @@
                     </li>
                     {% else %}
                         <li class="nav-link">
-                            <a href="{% url 'login' %}" class="link">
+                            <a href="{% url 'login' %}" class="SPA">
                                 <i class='bx bx-log-in icon' ></i>
                                 <span class="text nav-text">Войти</span>
                             </a>
