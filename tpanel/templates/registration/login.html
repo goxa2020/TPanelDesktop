@@ -1,50 +1,44 @@
+{% extends "tpanel/base.html" %}
 {% load static %}
-{#{% extends "tpanel/base.html" %}#}
-<head>
-
+{% block head %}
+    {{ block.super }}
     <title>Авторизация</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-</head>
+{% endblock %}
 {% block content %}
-
-    {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-
-    {% if next %}
-        {% if user.is_authenticated %}
-            <p>
-                Your account doesn't have access to this page. To proceed, please log in with an account that has access.
-            </p>
-        {% else %}
-            <p>Please login to see this page.</p>
+    <div class="text wrap">
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>
+                    Your account doesn't have access to this page. To proceed, please log in with an account that has access.
+                </p>
+            {% else %}
+                <p>Please login to see this page.</p>
+            {% endif %}
         {% endif %}
-    {% endif %}
 
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <table>
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
 
-        <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
-        </tr>
+            {{ form.username.label_tag }}
+            {{ form.username }}
 
-        <tr>
-            <td>{{ form.password.label_tag }}</td>
-            <td>{{ form.password }}</td>
-        </tr>
-        </table>
+            {{ form.password.label_tag }}
+            {{ form.password }}
 
-        <input type="hidden" name="next" value="{{ next }}" />
-        <button type="submit" class="SPA">Войти</button>
-    </form>
+            <button type="submit" class="SPA login-btn">Войти</button>
 
-    {# Assumes you setup the password_reset view in your URLconf #}
-    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
 
-    <script src="{% static 'js/SPA.js' %}"></script>
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+        {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+        {# Assumes you setup the password_reset view in your URLconf #}
+{#        <p><a href="{% url 'password_reset' %}">Lost password?</a></p>#}
 
+    {#    <script src="{% static 'js/SPA.js' %}"></script>#}
+    </div>
 {% endblock %}

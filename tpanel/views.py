@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
-# from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from .forms import UserForm, ProfileForm
-# from django.http import HttpResponse, Http404
 
 
 def main(request):
@@ -27,7 +25,7 @@ def notifications(request):
 
 
 def not_found(request, page):
-    return render(request, 'tpanel/not_found.html', {'page': page})
+    return render(request, 'tpanel/not_found.html', {'page': page, 'title': '404, не найдено'})
 
 
 @login_required
