@@ -39,28 +39,28 @@
             <div class="menu">
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="/" class="SPA">
+                        <a href="/" class="SPA-link">
                             <i class='bx bx-home-alt icon'></i>
                             <span class="text nav-text">Главная</span>
                         </a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-link">
-                        <a href="notifications" class="SPA">
+                        <a href="notifications" class="SPA-link">
                             <i class='bx bx-bell icon'></i>
                             <span class="text nav-text">Уведомления</span>
                         </a>
                     </li>
                     {% if user|is_student %}
                     <li class="nav-link">
-                        <a href="tasks" class="SPA">
+                        <a href="tasks" class="SPA-link">
                             <i class='bx bxs-copy-alt icon'></i>
                             <span class="text nav-text">Мои задания</span>
                         </a>
                     </li>
                     {% endif %}
                     <li class="nav-link">
-                        <a href="mail" class="SPA">
+                        <a href="mail" class="SPA-link">
                             <i class='bx bx-envelope icon'></i>
                             <span class="text nav-text">Почта</span>
                         </a>
@@ -80,16 +80,16 @@
                 <ul>
                     {% if user.is_authenticated %}
                     <li class="nav-link">
-                        <a href="/profile" class="SPA">
+                        <a href="/profile" class="SPA-link">
                             <i class='bx bx-user icon'></i>
                             <span class="text nav-text">Профиль</span>
                         </a>
                     </li>
                     <li class="nav-link">
-                        <form action="{% url 'logout' %}" method="post">
+                        <form action="{% url 'logout' %}" method="post" class="SPA-form">
                             {% csrf_token %}
                             <input type="hidden" name="next" value="{{ next }}" />
-                            <button type="submit" class="SPA">
+                            <button type="submit">
                                 <i class='bx bx-log-out icon' ></i>
                                 <span class="text nav-text">Выйти</span>
                             </button>
@@ -97,7 +97,7 @@
                     </li>
                     {% else %}
                         <li class="nav-link">
-                            <a href="{% url 'login' %}" class="SPA">
+                            <a href="{% url 'login' %}" class="SPA-link">
                                 <i class='bx bx-log-in icon' ></i>
                                 <span class="text nav-text">Войти</span>
                             </a>
@@ -123,15 +123,17 @@
         {% endblock %}
     </main>
     {% block scripts %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="{% static 'js/SPA.js' %}"></script>
-        <script src="{% static 'js/themes.js' %}"></script>
         <script>
-            var sidebar = body.querySelector('nav'),
+        const body = document.querySelector('body')
+        const sidebar = body.querySelector('nav'),
                   toggle = body.querySelector(".toggle");
             toggle.addEventListener("click" , () =>{
                 sidebar.classList.toggle("close");
             })
         </script>
+        <script src="{% static 'js/themes.js' %}"></script>
     {% endblock %}
 </body>
 </html>

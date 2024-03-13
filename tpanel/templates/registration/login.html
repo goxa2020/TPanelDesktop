@@ -2,7 +2,6 @@
 {% load static %}
 {% block head %}
     {{ block.super }}
-    <title>Авторизация</title>
 
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 
@@ -19,7 +18,7 @@
             {% endif %}
         {% endif %}
 
-        <form method="post" action="{% url 'login' %}">
+        <form method="post" action="{% url 'login' %}" class="SPA-form">
             {% csrf_token %}
 
             {{ form.username.label_tag }}

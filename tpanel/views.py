@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from .forms import UserForm, ProfileForm
 
 
 def main(request):
-
     return render(request, 'tpanel/main.html')
 
 
@@ -31,21 +31,26 @@ def not_found(request, page):
 @login_required
 @transaction.atomic
 def profile(request):
+
+    user_form = UserForm(instance=request.user)
+    profile_form = ProfileForm(instance=request.user.profile)
+
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user.profile)
-        print('проверка')
         if user_form.is_valid() and profile_form.is_valid():
+            name = user_form.cleaned_data.get('first_name')
             user_form.save()
             profile_form.save()
-            print('валид')
-            return redirect('/profile')
+            return JsonResponse({"name": name}, status=200)
+
         else:
-            print('невалид')
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
+            user_errors = user_form.errors.as_json()
+            profile_errors = profile_form.errors.as_json()
+            return JsonResponse({"errors": user_errors+profile_errors}, status=400)
+
     return render(request, 'registration/profile.html', {
+        'title': 'профиль',
         'user_form': user_form,
         'profile_form': profile_form
     })

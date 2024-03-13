@@ -25,5 +25,5 @@ class ProfileForm(forms.ModelForm):
             'birthday': False
         }
         widgets = {
-            "birthday": SelectDateWidget(years=list(range(1900, 2024)), )
+            "birthday": SelectDateWidget(years=list(range(2024, 1900, -1)), )
         }
