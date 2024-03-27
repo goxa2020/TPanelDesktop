@@ -1,5 +1,5 @@
-from backend_api.models import User, Profile
-from backend_api.serializer import RegisterSerializer, UserSerializer, MyTokenObtainPairSerializer
+from .models import User
+from .serializer import RegisterSerializer, MyTokenObtainPairSerializer
 
 from rest_framework import generics, status
 from rest_framework.response import Response
