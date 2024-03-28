@@ -1,6 +1,5 @@
 import {createContext, useState, useEffect} from "react";
 import { jwtDecode } from "jwt-decode";
-import {useNavigate} from "react-router-dom";
 const swal = require('sweetalert2')
 
 const AuthContext = createContext();
@@ -24,8 +23,6 @@ export const AuthProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(true);
 
-    const history = useNavigate();
-
     const loginUser = async (email, password) => {
         const response = await fetch("http://127.0.0.1:8000/api/token/", {
             method: "POST",
@@ -37,16 +34,13 @@ export const AuthProvider = ({ children }) => {
             })
         })
         const data = await response.json()
-        console.log(data);
 
         if(response.status === 200){
-            console.log("Logged In");
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
             localStorage.setItem("authTokens", JSON.stringify(data))
-            history.push("/")
             swal.fire({
-                title: "Login Successful",
+                title: "Авторизация успешна",
                 icon: "success",
                 toast: true,
                 timer: 6000,
@@ -56,14 +50,12 @@ export const AuthProvider = ({ children }) => {
             })
 
         } else {
-            console.log(response.status);
-            console.log("there was a server issue");
             swal.fire({
-                title: "Username or passowrd does not exists",
+                title: "Имя пользователя или пароль введён не верно",
                 icon: "error",
                 toast: true,
                 timer: 6000,
-                position: 'top-right',
+                position: 'top',
                 timerProgressBar: true,
                 showConfirmButton: false,
             })
@@ -81,7 +73,6 @@ export const AuthProvider = ({ children }) => {
             })
         })
         if(response.status === 201){
-            history.push("/login")
             swal.fire({
                 title: "Registration Successful, Login Now",
                 icon: "success",
@@ -92,10 +83,8 @@ export const AuthProvider = ({ children }) => {
                 showConfirmButton: false,
             })
         } else {
-            console.log(response.status);
-            console.log("there was a server issue");
             swal.fire({
-                title: "An Error Occured " + response.status,
+                title: "Произошла ошибка " + response.status,
                 icon: "error",
                 toast: true,
                 timer: 6000,
@@ -110,9 +99,8 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null)
         setUser(null)
         localStorage.removeItem("authTokens")
-        history.push("/login")
         swal.fire({
-            title: "YOu have been logged out...",
+            title: "Вы вышли из аккаунта...",
             icon: "success",
             toast: true,
             timer: 6000,

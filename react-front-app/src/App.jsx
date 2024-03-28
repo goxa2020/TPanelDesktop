@@ -10,13 +10,15 @@ import LoginPage from "./components/pages/login/LoginPage.jsx";
 
 import Sidebar from "./components/base/Sidebar.jsx";
 import { AuthProvider } from "./context/AuthContext";
+import UnPrivateRoute from "./utils/UnPrivateRouter";
+import ProfilePage from "./components/pages/profile/ProfilePage";
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Sidebar />
-        <main className="home text">
+        <main className="home">
           <div className="text">
             <Routes>
               <Route path="/" Component={MainPage} />
@@ -36,7 +38,22 @@ export default function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/login" Component={LoginPage} />
+              <Route
+                path="/login"
+                element={
+                  <UnPrivateRoute>
+                    <LoginPage />
+                  </UnPrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </div>
         </main>

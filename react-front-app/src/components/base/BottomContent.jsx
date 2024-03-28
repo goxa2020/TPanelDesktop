@@ -1,6 +1,6 @@
 import { store } from "../../themes.js";
-import NavButton from "./NavButton.jsx";
 import PrivateNavButton from "./PrivateNavButton";
+import LogInOutButton from "./LogInOutButton";
 
 export default function BottomContent() {
   function switchClicked() {
@@ -17,15 +17,7 @@ export default function BottomContent() {
           text="Профиль"
           SPA
         />
-        <li className="nav-link">
-          <form action="/logout" method="post" className="SPA-form">
-            <button type="submit">
-              <i className="bx bx-log-out icon"></i>
-              <span className="text nav-text">Выйти</span>
-            </button>
-          </form>
-        </li>
-        <NavButton iconName="bx-log-in" href="/login" text="Войти" SPA />
+        <LogInOutButton />
         <li className="mode">
           <div className="sun-moon">
             <i className="bx bx-moon icon moon"></i>
