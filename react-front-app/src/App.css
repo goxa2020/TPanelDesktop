@@ -94,6 +94,7 @@ body.dark{
     position: relative;
 }
 .sidebar header .image-text{
+    margin-top: 10px;
     display: flex;
     align-items: center;
 }
@@ -102,14 +103,8 @@ body.dark{
     flex-direction: column;
 }
 header .image-text .name {
-    margin-top: 2px;
     font-size: 18px;
     font-weight: 600;
-}
-header .image-text .profession{
-    font-size: 16px;
-    margin-top: -2px;
-    display: block;
 }
 .sidebar header .image{
     display: flex;
@@ -117,8 +112,19 @@ header .image-text .profession{
     justify-content: center;
 }
 .sidebar header .image img{
-    width: 40px;
-    border-radius: 6px;
+    position: absolute;
+    transition: var(--tran-03);
+    width: 25px;
+}
+
+.sidebar header .image .logo-min-light {
+    opacity: 0;
+}
+body.dark .sidebar header .image .logo-min-dark {
+    opacity: 0;
+}
+body.dark .sidebar header .image .logo-min-light {
+    opacity: 1;
 }
 .sidebar header .toggle{
     position: absolute;
@@ -145,24 +151,6 @@ body.dark .sidebar header .toggle{
 }
 .sidebar .menu{
     margin-top: 40px;
-}
-.sidebar li.search-box{
-    border-radius: 6px;
-    background-color: var(--primary-color-light);
-    cursor: pointer;
-    transition: var(--tran-05);
-}
-.sidebar li.search-box input{
-    height: 100%;
-    width: 100%;
-    outline: none;
-    border: none;
-    background-color: var(--primary-color-light);
-    color: var(--text-color);
-    border-radius: 6px;
-    font-size: 17px;
-    font-weight: 500;
-    transition: var(--tran-05);
 }
 .sidebar li a,
 .sidebar li button,
@@ -282,4 +270,9 @@ body.dark .switch::before{
 }
 body.dark .home .text{
     color: var(--text-color);
+}
+.center {
+    text-align: center;
+    align-items: center;
+
 }

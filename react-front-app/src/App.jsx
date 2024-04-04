@@ -12,6 +12,7 @@ import Sidebar from "./components/base/Sidebar.jsx";
 import { AuthProvider } from "./context/AuthContext";
 import UnPrivateRoute from "./utils/UnPrivateRouter";
 import ProfilePage from "./components/pages/profile/ProfilePage";
+import NotFoundPage from "./components/pages/not_found/NotFoundPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <main className="home">
           <div className="text">
             <Routes>
+              <Route path="*" Component={NotFoundPage} />
               <Route path="/" Component={MainPage} />
               <Route
                 path="/notifications"

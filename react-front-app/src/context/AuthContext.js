@@ -7,6 +7,21 @@ const AuthContext = createContext();
 export default AuthContext
 
 export const AuthProvider = ({ children }) => {
+
+    const notify = (title, icon) => {
+        swal.fire({
+            title: title,
+            icon: icon,
+            toast: true,
+            timer: 4500,
+            position: 'top-end',
+            timerProgressBar: true,
+            showConfirmButton: false,
+            color: 'var(--text-color)',
+            background: 'var(--sidebar-color)'
+        })
+    };
+
     const [authTokens, setAuthTokens] = useState(() =>
         localStorage.getItem("authTokens")
             ? JSON.parse(localStorage.getItem("authTokens"))
@@ -39,26 +54,10 @@ export const AuthProvider = ({ children }) => {
             setAuthTokens(data)
             setUser(jwtDecode(data.access))
             localStorage.setItem("authTokens", JSON.stringify(data))
-            swal.fire({
-                title: "Авторизация успешна",
-                icon: "success",
-                toast: true,
-                timer: 6000,
-                position: 'top-right',
-                timerProgressBar: true,
-                showConfirmButton: false,
-            })
+            notify("Авторизация успешна", "success")
 
         } else {
-            swal.fire({
-                title: "Имя пользователя или пароль введён не верно",
-                icon: "error",
-                toast: true,
-                timer: 6000,
-                position: 'top',
-                timerProgressBar: true,
-                showConfirmButton: false,
-            })
+            notify("Имя пользователя или пароль введён не верно", "error")
         }
     }
 
@@ -73,25 +72,9 @@ export const AuthProvider = ({ children }) => {
             })
         })
         if(response.status === 201){
-            swal.fire({
-                title: "Registration Successful, Login Now",
-                icon: "success",
-                toast: true,
-                timer: 6000,
-                position: 'top-right',
-                timerProgressBar: true,
-                showConfirmButton: false,
-            })
+            notify("Registration Successful, Login Now", "success")
         } else {
-            swal.fire({
-                title: "Произошла ошибка " + response.status,
-                icon: "error",
-                toast: true,
-                timer: 6000,
-                position: 'top-right',
-                timerProgressBar: true,
-                showConfirmButton: false,
-            })
+            notify("Произошла ошибка " + response.status, "error")
         }
     }
 
@@ -99,15 +82,7 @@ export const AuthProvider = ({ children }) => {
         setAuthTokens(null)
         setUser(null)
         localStorage.removeItem("authTokens")
-        swal.fire({
-            title: "Вы вышли из аккаунта...",
-            icon: "success",
-            toast: true,
-            timer: 6000,
-            position: 'top-right',
-            timerProgressBar: true,
-            showConfirmButton: false,
-        })
+        notify("Вы вышли из аккаунта...", "success")
     }
 
     const contextData = {
