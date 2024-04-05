@@ -8,7 +8,7 @@ export function store(value){
 
 function checkTheme() {
 
-    var darkmode = localStorage.getItem('darkmode');
+    let darkmode = localStorage.getItem('darkmode');
     if (darkmode === null) {
         store('false');
         darkmode = 'false';

@@ -17,10 +17,10 @@ export default function LoginPage() {
         <div className={s.container}>
             <h2 className={s.H2}>Авторизация</h2>
             <form className={s.Form} onSubmit={handleSubmit}>
-                <label htmlFor="uname"><b>Username</b></label>
+                <label className={s.Label} htmlFor="uname"><b>Username</b></label>
                 <input className={s.Input} type="email" placeholder="Enter email" id="email" required />
 
-                <label htmlFor="psw"><b>Password</b></label>
+                <label className={s.Label} htmlFor="psw"><b>Password</b></label>
                 <input className={s.Input} type="password" placeholder="Enter password" id="password" required />
 
                 <button className={s.Button} type="submit">Login</button>

@@ -10,15 +10,14 @@ const useAxios = () => {
   const { authTokens, setUser, setAuthToken } = useContext(AuthContext);
 
   const axiosInstance = axios.create({
-    BaseUrl,
     headers: { Authorization: `Bearer ${authTokens?.access}` },
   });
 
   axiosInstance.interceptors.request.use(async (req) => {
     const user = jwtDecode(authTokens.access);
-    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) > 1;
 
-    if (isExpired) return req;
+    if (!isExpired) return req;
 
     const response = await axios.post(`${BaseUrl}/token/refresh/`, {
       refresh: authTokens.refresh,
