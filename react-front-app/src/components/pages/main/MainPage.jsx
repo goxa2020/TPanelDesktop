@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import react_logo from "../../../react-logo.svg";
 
 export default function MainPage() {
   const [now, setNow] = useState(new Date());
@@ -14,8 +13,8 @@ export default function MainPage() {
 
   return (
     <>
-      <img src={react_logo} alt="react-logo" height={100} />
-      <h3>Здарова, петушары</h3>
+      <img src={"/react-logo.svg"} alt="react-logo" height={100} />
+      <h3>Здарова, ребята</h3>
       <span>Время сейчас: {now.toLocaleTimeString()}</span>
     </>
   );

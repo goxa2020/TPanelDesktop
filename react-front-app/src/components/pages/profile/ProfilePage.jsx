@@ -6,6 +6,7 @@ export default function ProfilePage() {
   return (
     <>
       <h3>Привет, {user.username}</h3>
+      <p>Здравствуйте, {user.full_name}</p>
     </>
   )
 }

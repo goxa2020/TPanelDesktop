@@ -4,7 +4,7 @@
 }
 
 .wrapper{
-  margin-top: 100px;
+  margin-top: 10px;
 }
 
 .team{
@@ -18,7 +18,7 @@
 .team .team_member{
   transition: var(--tran-03);
   background: var(--sidebar-color);
-  margin: 5px 5px 80px;
+  margin: 80px 5px 5px;
   width: 280px;
   padding: 20px;
   line-height: 20px;

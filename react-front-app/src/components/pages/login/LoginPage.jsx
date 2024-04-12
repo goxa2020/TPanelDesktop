@@ -23,7 +23,7 @@ export default function LoginPage() {
                 <label className={s.Label} htmlFor="psw"><b>Password</b></label>
                 <input className={s.Input} type="password" placeholder="Enter password" id="password" required />
 
-                <button className={s.Button} type="submit">Login</button>
+                <button className={s.Button} type="submit">Войти</button>
             </form>
         </div>
     </>
