@@ -6,7 +6,7 @@ export default function NotFoundPage() {
     return (
         <>
           <h3 className={s.center}>Вы нашли секретную страничку</h3>
-          <h2 className={s.center}>404 - Не найдено</h2>
+          <h2 className={s.center}>404 - Not found</h2>
           <h1 className={s.center}>Наша команда</h1>
           <div className={s.wrapper}>
             <div className={s.team}>

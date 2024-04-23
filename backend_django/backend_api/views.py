@@ -1,10 +1,10 @@
-from .models import User
-from .serializer import RegisterSerializer, MyTokenObtainPairSerializer
+from .models import User, Task, Student
+from .serializer import RegisterSerializer, MyTokenObtainPairSerializer, TaskSerializer
 
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
@@ -24,13 +24,13 @@ def get_routes(request):
         '/api/',
         '/api/token/',
         '/api/token/refresh/',
-        '/api/register/'
+        '/api/register/',
+        '/api/tasks/'
     ]
     return Response(routes)
 
 
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
 def test_endpoint(request):
     if request.method == 'GET':
         data = f"Congratulation {request.user}, your API just responded to GET request"
@@ -40,3 +40,26 @@ def test_endpoint(request):
         data = f'Congratulation your API just responded to POST request with text: {text}'
         return Response({'response': data}, status=status.HTTP_200_OK)
     return Response({}, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_tasks(request):
+    user_id = request.query_params.get('user_id')
+    print('запрос на пользователя', user_id)
+    user: User = User.objects.filter(id=user_id).first()
+    print('Пользователь:', user)
+    if user:
+        print('такой существует')
+        if user.is_student:
+            print('он студент')
+            tasks = Task.objects.filter(students=user).all()
+            serialised_tasks = [TaskSerializer(task).data for task in tasks]
+
+            return Response(serialised_tasks, status.HTTP_200_OK)
+        elif user.is_teacher:
+            print("он препод")
+            tasks = Task.objects.filter(teacher=user).all()
+            serialised_tasks = [TaskSerializer(task).data for task in tasks]
+
+            return Response(serialised_tasks, status.HTTP_200_OK)
+    return Response({}, status.HTTP_404_NOT_FOUND)

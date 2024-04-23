@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Task, Student, Teacher
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -8,12 +8,28 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email')
+        fields = ('id', 'username', 'email', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher')
+
+
+class StudentSerializer(UserSerializer):
+    class Meta:
+        model = Student
+        fields = ('id', 'username', 'email', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'student_group')
+
+
+class TeacherSerializer(UserSerializer):
+    class Meta:
+        model = Teacher
+        fields = ('id', 'username', 'email', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'teacher_achievements')
+
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
-    def get_token(cls, user):
+    def get_token(cls, user: User):
         token = super().get_token(user)
 
         # These are claims, you can add custom claims
@@ -27,9 +43,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # ...
         token['is_student'] = user.is_student
         token['is_teacher'] = user.is_teacher
-        token['student_group'] = user.student_group
-        token['teacher_achievements'] = user.teacher_achievements
-        # print(user.is_teacher, user.is_student)
+        if user.is_student:
+            token['student_group'] = Student.objects.filter(id=user.id).first().student_group
+        if user.is_teacher:
+            token['teacher_achievements'] = Teacher.objects.filter(id=user.id).first().teacher_achievements
+
+        print(user.is_teacher, user.is_student)
 
         return token
 
@@ -62,3 +81,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    teacher = TeacherSerializer(read_only=True)
+    students = StudentSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Task
+        fields = ('id', 'name', 'teacher', 'students')
