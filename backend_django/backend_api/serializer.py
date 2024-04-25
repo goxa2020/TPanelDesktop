@@ -1,4 +1,4 @@
-from .models import User, Task, Student, Teacher
+from .models import User, Project, Student, Teacher
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -83,10 +83,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class TaskSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer(read_only=True)
     students = StudentSerializer(read_only=True, many=True)
 
     class Meta:
-        model = Task
+        model = Project
         fields = ('id', 'name', 'teacher', 'students')

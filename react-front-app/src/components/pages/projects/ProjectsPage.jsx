@@ -1,25 +1,25 @@
 import {useContext, useEffect, useState} from "react";
 import AuthContext from "../../../context/AuthContext";
 import axios from "axios";
-import TaskCard from "../../base/TaskCard"
+import ProjectCard from "../../base/ProjectCard"
 
-export default function TasksPage() {
+export default function ProjectsPage() {
     const { user } = useContext(AuthContext);
-    const [tasks, setTasks] = useState([]);
+    const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        axios.get("http://127.0.0.1:8000/api/tasks/", {
+        axios.get("http://127.0.0.1:8000/api/projects/", {
             params: {
                 user_id: user.user_id
             }
         })
         .then(response => {
                 console.log(response.data);
-                setTasks(response.data);
+                setProjects(response.data);
         })
     }, []);
 
-    // tasks.map(item => (
+    // projects.map(item => (
     //     console.log(item.id)
     // ))
 
@@ -28,8 +28,8 @@ export default function TasksPage() {
         <h3>Ваши текущие работы:</h3>
         <br/>
         <ul>
-          {tasks.map(task => (
-            <TaskCard task={task}/>
+          {projects.map(project => (
+            <ProjectCard project={project}/>
           ))}
           </ul>
       </>

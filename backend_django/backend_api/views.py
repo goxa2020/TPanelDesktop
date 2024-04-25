@@ -1,5 +1,5 @@
-from .models import User, Task, Student
-from .serializer import RegisterSerializer, MyTokenObtainPairSerializer, TaskSerializer
+from .models import User, Project, Student
+from .serializer import RegisterSerializer, MyTokenObtainPairSerializer, ProjectSerializer
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -25,7 +25,7 @@ def get_routes(request):
         '/api/token/',
         '/api/token/refresh/',
         '/api/register/',
-        '/api/tasks/'
+        '/api/projects/'
     ]
     return Response(routes)
 
@@ -43,7 +43,7 @@ def test_endpoint(request):
 
 
 @api_view(['GET'])
-def get_tasks(request):
+def get_projects(request):
     user_id = request.query_params.get('user_id')
     print('запрос на пользователя', user_id)
     user: User = User.objects.filter(id=user_id).first()
@@ -52,14 +52,14 @@ def get_tasks(request):
         print('такой существует')
         if user.is_student:
             print('он студент')
-            tasks = Task.objects.filter(students=user).all()
-            serialised_tasks = [TaskSerializer(task).data for task in tasks]
+            projects = Project.objects.filter(students=user).all()
+            serialised_projects = [ProjectSerializer(project).data for project in projects]
 
-            return Response(serialised_tasks, status.HTTP_200_OK)
+            return Response(serialised_projects, status.HTTP_200_OK)
         elif user.is_teacher:
             print("он препод")
-            tasks = Task.objects.filter(teacher=user).all()
-            serialised_tasks = [TaskSerializer(task).data for task in tasks]
+            projects = Project.objects.filter(teacher=user).all()
+            serialised_projects = [ProjectSerializer(project).data for project in projects]
 
-            return Response(serialised_tasks, status.HTTP_200_OK)
+            return Response(serialised_projects, status.HTTP_200_OK)
     return Response({}, status.HTTP_404_NOT_FOUND)

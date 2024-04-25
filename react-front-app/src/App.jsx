@@ -5,7 +5,7 @@ import PrivateRoute from "./utils/PrivateRouter";
 
 import MainPage from "./components/pages/main/MainPage.jsx";
 import NotificationsPage from "./components/pages/notifications/NotificationPage.jsx";
-import TasksPage from "./components/pages/tasks/TasksPage.jsx";
+import ProjectsPage from "./components/pages/projects/ProjectsPage.jsx";
 import LoginPage from "./components/pages/login/LoginPage.jsx";
 
 import Sidebar from "./components/base/Sidebar.jsx";
@@ -33,10 +33,10 @@ export default function App() {
               }
             />
             <Route
-              path="/tasks"
+              path="/projects"
               element={
                 <PrivateRoute>
-                  <TasksPage />
+                  <ProjectsPage />
                 </PrivateRoute>
               }
             />

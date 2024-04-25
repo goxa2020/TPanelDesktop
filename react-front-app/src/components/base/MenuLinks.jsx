@@ -12,7 +12,7 @@ export default function MenuLinks() {
       />
       <PrivateNavButton
         iconName="bxs-copy-alt"
-        href="tasks"
+        href="projects"
         text="Мои задания"
       />
       <PrivateNavButton iconName="bx-envelope" href="mail" text="Почта" />
