@@ -1,7 +1,10 @@
 import {useContext, useEffect, useState} from "react";
 import AuthContext from "../../../context/AuthContext";
 import axios from "axios";
-import ProjectCard from "../../base/ProjectCard"
+import StudentProjectCard from "./StudentProjectCard"
+import TeacherProjectCard from "./TeacherProjectCard"
+import s from './projectPage.module.scss'
+
 
 export default function ProjectsPage() {
     const { user } = useContext(AuthContext);
@@ -14,24 +17,19 @@ export default function ProjectsPage() {
             }
         })
         .then(response => {
-                console.log(response.data);
                 setProjects(response.data);
         })
     }, []);
 
-    // projects.map(item => (
-    //     console.log(item.id)
-    // ))
-
     return (
       <>
         <h3>Ваши текущие работы:</h3>
-        <br/>
-        <ul>
+
+        <ol className={s.projectList}>
           {projects.map(project => (
-            <ProjectCard project={project}/>
+            user.is_teacher ? <TeacherProjectCard project={project} /> : <StudentProjectCard project={project} />
           ))}
-          </ul>
+          </ol>
       </>
     )
 }

@@ -1,29 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-# from django.db.models.signals import post_save
-# from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 
 class User(AbstractUser):
-    # is_student = False
-    # is_teacher = False
     username = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # full_name = models.CharField(max_length=300)
-    image = models.ImageField(upload_to="user_images", default="default")
+    image = models.ImageField(upload_to="user_images", default=False)
     birthday = models.DateField(blank=True, null=True)
-
-    # is_teacher = models.BooleanField(blank=True, default=False)
-    # is_student = models.BooleanField(blank=True, default=False)
-    # student_group = models.CharField(max_length=15, blank=True, null=True)
-    # teacher_achievements = models.CharField(max_length=150, blank=True, null=True)
 
     verified = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+    class Meta:
+        verbose_name = _("пользователь")
+        verbose_name_plural = _("пользователи")
 
     @property
     def full_name(self):
@@ -34,11 +27,11 @@ class User(AbstractUser):
 
     @property
     def is_student(self):
-        return bool(Student.objects.filter(id=self.id))
+        return bool(Student.objects.filter(id=self.id).first())
 
     @property
     def is_teacher(self):
-        return bool(Teacher.objects.filter(id=self.id))
+        return bool(Teacher.objects.filter(id=self.id).first())
 
     def __str__(self) -> str:
         return self.full_name
@@ -48,42 +41,42 @@ class Student(User):
     student_group = models.CharField(max_length=15, blank=True, null=True)
 
     class Meta:
-        verbose_name = _("student")
-        verbose_name_plural = _("students")
+        verbose_name = _("ученик")
+        verbose_name_plural = _("ученики")
 
 
 class Teacher(User):
     teacher_achievements = models.CharField(max_length=150, blank=True, null=True)
 
     class Meta:
-        verbose_name = _("teacher")
-        verbose_name_plural = _("teachers")
+        verbose_name = _("учитель")
+        verbose_name_plural = _("учителя")
+
+
+class Project(models.Model):
+    name = models.CharField(max_length=150)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='projects')
+    students = models.ManyToManyField(Student, related_name='projects', null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("проект")
+        verbose_name_plural = _("проекты")
+
+    def __str__(self):
+        return f'{self.id}: {self.name}'
 
 
 class Task(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
     name = models.CharField(max_length=150, blank=True, null=True)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='tasks')
-    students = models.ManyToManyField(Student)
+    description = models.TextField(blank=True, null=True)
+    created = models.DateField(auto_now_add=True)
+    deadline = models.DateField(blank=True, null=True)
+    done = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = _("task")
-        verbose_name_plural = _("tasks")
+        verbose_name = _("Задача")
+        verbose_name_plural = _("Задачи")
 
-# class Profile(models.Model):
-#
-#
-#     def __str__(self) -> str:
-#         return self.full_name
-
-
-# # при создании user, создаётся и profile
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         Profile.objects.create(user=instance)
-#
-#
-# # при сохранении user, сохраняется и profile
-# @receiver(post_save, sender=User)
-# def save_user_profile(sender, instance, **kwargs):
-#     instance.profile.save()
+    def __str__(self):
+        return f'{self.id}: {self.name}'

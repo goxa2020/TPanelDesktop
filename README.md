@@ -3,17 +3,21 @@
 ## install all dependencies
 
 ### python
+First step:
+`cd backend_django`\
+Django project has requirements.txt with all python dependencies\
+To install you need write: `pip install -r requirements.txt` in your venv
 
-Django project has requirements.txt with all python dependencies,
-To install you need write: `pip install -r requirements.txt` in backend_django and in your venv
-
+You also need to run migrations: `py manage.py makemigrations`, `py manage.py migrate `
 ### node
-
-To install react dependencies just run `npm install`. It will resolve the required dependencies from the package.json file.
+First step:
+`cd react-fron-app`\
+To install react dependencies just run `npm install`.\
+It will resolve the required dependencies from the package.json file.
 
 ## Start app
 
-To start this app you need
+To start this app you need:
 
 ### react
 

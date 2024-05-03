@@ -1,5 +1,6 @@
-from .models import User, Project, Student
-from .serializer import RegisterSerializer, MyTokenObtainPairSerializer, ProjectSerializer
+from .models import User, Project, Student, Teacher, Task
+from .serializer import RegisterSerializer, MyTokenObtainPairSerializer, ProjectSerializer, TaskSerializer, \
+    UserSerializer
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -18,6 +19,13 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
 
+class UserView(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = UserSerializer
+    lookup_field = 'id'
+
+
 @api_view(['GET'])
 def get_routes(request):
     routes = [
@@ -30,36 +38,84 @@ def get_routes(request):
     return Response(routes)
 
 
-@api_view(['GET', 'POST'])
-def test_endpoint(request):
-    if request.method == 'GET':
-        data = f"Congratulation {request.user}, your API just responded to GET request"
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    elif request.method == 'POST':
-        text = request.data.get('text')
-        data = f'Congratulation your API just responded to POST request with text: {text}'
-        return Response({'response': data}, status=status.HTTP_200_OK)
-    return Response({}, status.HTTP_400_BAD_REQUEST)
+class ProjectsView(generics.ListAPIView):
+    queryset = Project.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = ProjectSerializer
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        if not queryset:
+            return Response([], status=status.HTTP_204_NO_CONTENT)
+        serializer = ProjectSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-@api_view(['GET'])
-def get_projects(request):
-    user_id = request.query_params.get('user_id')
-    print('запрос на пользователя', user_id)
-    user: User = User.objects.filter(id=user_id).first()
-    print('Пользователь:', user)
-    if user:
-        print('такой существует')
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+        # teacher_id = request.data.get('teacher_id')
+        # if not teacher_id:
+        #     print('no teacher id')
+        #     return Response([], status=status.HTTP_400_BAD_REQUEST)
+        #
+        # teacher: Teacher = Teacher.objects.create(**request.data)
+        # if not teacher:
+        #     print('no teacher found')
+        #     return Response([], status=status.HTTP_400_BAD_REQUEST)
+        #
+        # data = {'name': request.data.get('name'), 'teacher': teacher}
+        # serializer = ProjectSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # serializer.save()
+        # headers = self.get_success_headers(serializer.data)
+        # return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def filter_queryset(self, queryset):
+        user_id = self.request.query_params.get('user_id')
+
+        if not user_id:
+            return queryset
+
+        user: User = User.objects.filter(id=user_id).first()
+
+        if not user:
+            return
+
         if user.is_student:
-            print('он студент')
-            projects = Project.objects.filter(students=user).all()
-            serialised_projects = [ProjectSerializer(project).data for project in projects]
+            projects = queryset.filter(students=user).all()
+            return projects
 
-            return Response(serialised_projects, status.HTTP_200_OK)
-        elif user.is_teacher:
-            print("он препод")
-            projects = Project.objects.filter(teacher=user).all()
-            serialised_projects = [ProjectSerializer(project).data for project in projects]
+        if user.is_teacher:
+            projects = queryset.filter(teacher=user).all()
+            return projects
 
-            return Response(serialised_projects, status.HTTP_200_OK)
-    return Response({}, status.HTTP_404_NOT_FOUND)
+
+class ProjectView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Project.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = ProjectSerializer
+    lookup_field = 'id'
+
+
+class ProjectCreateView(generics.CreateAPIView):
+    queryset = Project.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = ProjectSerializer
+
+
+class TaskView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TaskSerializer
+    lookup_field = 'id'
+
+
+class TaskCreateView(generics.CreateAPIView):
+    queryset = Task.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TaskSerializer
+
+
+class TasksView(generics.ListAPIView):
+    queryset = Task.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = TaskSerializer

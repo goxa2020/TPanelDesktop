@@ -1,4 +1,4 @@
-from .models import User, Project, Student, Teacher
+from .models import User, Project, Student, Teacher, Task
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -8,8 +8,9 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'full_name', 'birthday',
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'birthday',
                   'verified', 'image', 'is_staff', 'is_student', 'is_teacher')
+        # fields = '__all__'
 
 
 class StudentSerializer(UserSerializer):
@@ -24,7 +25,6 @@ class TeacherSerializer(UserSerializer):
         model = Teacher
         fields = ('id', 'username', 'email', 'full_name', 'birthday',
                   'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'teacher_achievements')
-
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -47,8 +47,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['student_group'] = Student.objects.filter(id=user.id).first().student_group
         if user.is_teacher:
             token['teacher_achievements'] = Teacher.objects.filter(id=user.id).first().teacher_achievements
-
-        print(user.is_teacher, user.is_student)
 
         return token
 
@@ -83,10 +81,23 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class TaskSerializer(serializers.ModelSerializer):
+    project = serializers.SlugRelatedField(slug_field='id', queryset=Project.objects, read_only=False, allow_null=True)
+
+    class Meta:
+        model = Task
+        fields = ('id', 'project', 'name', 'description', 'created', 'deadline', 'done')
+
+
 class ProjectSerializer(serializers.ModelSerializer):
-    teacher = TeacherSerializer(read_only=True)
-    students = StudentSerializer(read_only=True, many=True)
+    queryset = Project.objects.all()
+    # teacher = TeacherSerializer(read_only=True)
+    teacher = serializers.SlugRelatedField(slug_field='id', queryset=Teacher.objects)
+    students = serializers.SlugRelatedField(slug_field='id', queryset=Student.objects, many=True, read_only=False)
+    # students = StudentSerializer(many=True)
+    # tasks = TaskSerializer(many=True)
+    tasks = serializers.SlugRelatedField(slug_field='id', queryset=Task.objects, many=True, read_only=False)
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'teacher', 'students')
+        fields = ('id', 'name', 'tasks', 'teacher', 'students')
