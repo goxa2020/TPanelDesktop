@@ -1,42 +1,38 @@
 .projectList {
-  margin-left: 0;
   margin-top: 1em;
   list-style: none;
   counter-reset: li;
 
   .projectCard {
+    text-decoration: none;
     position: relative;
     margin-bottom: 1.5em;
     padding: 0.6em;
     border-radius:10px;
     background-color: var(--sidebar-color);
     color: var(--text-color);
-    width: 100%;
     font-size: 2.3vh;
 
-    transition: var(--tran-02);
+    transition: var(--tran-03);
 
     display: flex;
-    flex-direction: row;
+    //flex-direction: row;
     justify-content: space-between;
     &:before {
 
       position: absolute;
       top: -0.7em;
       padding-left: 0.4em;
-      padding-right: 0.4em;
+      padding-right: 0.5em;
       font-size: 16px;
       font-weight: bold;
-      color: var(--primary-color);
-      background-color: var(--sidebar-color);
-      //background: #FEFEFE;
+      background-color: var(--primary-color-light);
       border-radius: 50%;
       counter-increment: li;
       content: counter(li);
     }
-    p {
-      display:inline;
+    &:hover {
+      background-color: var(--primary-color-light);
     }
   }
-
 }

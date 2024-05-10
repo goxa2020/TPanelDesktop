@@ -1,23 +1,27 @@
 import s from './projectPage.module.scss'
 import {useEffect, useState} from "react";
 import axios from "axios";
+import {NavLink} from "react-router-dom";
+import {BaseUrl} from "../../../utils/useAxios";
 
 export default function StudentProjectCard({ project }) {
-    const [teacher, setTeacher] = useState([]);
+    const [teacher, setTeacher] = useState("---");
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:8000/api/user/${project.teacher}`)
+        axios.get(`${BaseUrl}/user/${project.teacher}`)
         .then(response => {
-            console.log(response.data)
             setTeacher(response.data);
         })
-    }, []);
+    }, [project.teacher]);
 
     return (
-      <li className={s.projectCard} key={project.id}>
-        <div className={s.projectName}>{project.name}</div>
+        <li>
+            <NavLink className={s.projectCard} to={''}>
+                <div className={s.projectName}>{project.name}</div>
 
-        <div className={s.projectTeacher}>Преподаватель: {teacher.first_name} {teacher.last_name}</div>
-      </li>
+                <div className={s.projectTeacher}>Преподаватель: {teacher.first_name} {teacher.last_name}</div>
+            </NavLink>
+
+        </li>
     )
 }

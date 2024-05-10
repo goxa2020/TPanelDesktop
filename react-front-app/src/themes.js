@@ -21,4 +21,3 @@ function checkTheme() {
 }
 
 checkTheme()
-console.log('ТЕМЫ подгружены');
