@@ -56,7 +56,7 @@ class Teacher(User):
 class Project(models.Model):
     name = models.CharField(max_length=150)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='projects')
-    students = models.ManyToManyField(Student, related_name='projects', null=True, blank=True)
+    students = models.ManyToManyField(Student, related_name='projects', blank=True)
 
     class Meta:
         verbose_name = _("проект")

@@ -80,8 +80,8 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 
 
 REST_FRAMEWORK = {
-    'DEFOULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWYAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
@@ -119,6 +119,7 @@ AUTH_USER_MODEL = 'backend_api.User'
 
 
 SIMPLE_JWT = {
+    "TOKEN_OBTAIN_SERIALIZER": "backend_api.serializers.MyTokenObtainPairSerializer",
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
     'ROTATE_REFRESH_TOKENS': True,
@@ -158,7 +159,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'Europe\\Moscow'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

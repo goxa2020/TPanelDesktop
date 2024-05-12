@@ -257,7 +257,7 @@ body.dark .switch::before{
     background-color: var(--body-color);
     transition: var(--tran-05);
 }
-.home .text{
+.text{
     font-size: 30px;
     font-weight: 500;
     color: var(--text-color);
