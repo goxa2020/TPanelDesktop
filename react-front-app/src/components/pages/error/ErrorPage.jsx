@@ -1,6 +1,5 @@
-import {useRouteError} from "react-router-dom";
+import {NavLink, useRouteError} from "react-router-dom";
 import Sidebar from "../../base/Sidebar";
-import NotFoundPage from "./not_found/NotFoundPage";
 
 export default function ErrorPage() {
     const error = useRouteError();
@@ -8,17 +7,12 @@ export default function ErrorPage() {
         <>
             <Sidebar />
             <div className="home text" id="error-page">
-                {
-                    (error.status === 404) ?
-                    <NotFoundPage /> :
-                    <>
-                        <h1>Упс!</h1>
-                        <p>Извините, произошла непредвиденная ошибка.</p>
-                        <p>
-                            <i>{error.message || error.statusText}</i>
-                        </p>
-                    </>
-                }
+                <h1>Упс!</h1>
+                <p>Извините, произошла непредвиденная ошибка.</p>
+                <p>
+                    <i>{error.statusText}</i>
+                </p>
+                <NavLink to={"/"}>На главную</NavLink>
             </div>
         </>
     );

@@ -10,9 +10,10 @@ import LoginPage from "./components/pages/login/LoginPage.jsx";
 
 import UnPrivateRoute from "./utils/UnPrivateRouter";
 import ProfilePage from "./components/pages/profile/ProfilePage";
-import ProjectPage from "./components/pages/project/ProjectPage";
+import ProjectPage from "./components/pages/project/ProjectPage.tsx";
 import Root from "./components/pages/Root";
 import ErrorPage from "./components/pages/error/ErrorPage";
+import NotFoundPage from "./components/pages/error/not_found/NotFoundPage";
 
 export default function App() {
     const router = createBrowserRouter([
@@ -22,8 +23,16 @@ export default function App() {
             errorElement: <ErrorPage />,
             children: [
                 {
+                    path: "/*",
+                    element: <NotFoundPage />
+                },
+                {
                     path: "/",
                     element: <MainPage />
+                },
+                {
+                    path: "/mail",
+                    element: <PrivateRoute><NotificationsPage /></PrivateRoute>
                 },
                 {
                     path: "/notifications",

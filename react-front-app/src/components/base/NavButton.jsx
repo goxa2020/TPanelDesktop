@@ -7,7 +7,7 @@ export default function NavButton({ iconName, href, text }) {
     <li className="nav-link">
       <NavLink to={href}>
         <i className={iclasses}></i>
-        <span className="text nav-text">{text}</span>
+        <span className="text">{text}</span>
       </NavLink>
     </li>
   );

@@ -8,23 +8,23 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'birthday',
-                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'role')
         # fields = '__all__'
 
 
 class StudentSerializer(UserSerializer):
     class Meta:
         model = Student
-        fields = ('id', 'username', 'email', 'full_name', 'birthday',
-                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'student_group')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'role', 'student_group')
 
 
 class TeacherSerializer(UserSerializer):
     class Meta:
         model = Teacher
-        fields = ('id', 'username', 'email', 'full_name', 'birthday',
-                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'teacher_achievements')
+        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'full_name', 'birthday',
+                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'role', 'teacher_achievements')
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):

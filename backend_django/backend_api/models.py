@@ -33,6 +33,12 @@ class User(AbstractUser):
     def is_teacher(self):
         return bool(Teacher.objects.filter(id=self.id).first())
 
+    @property
+    def role(self):
+        role = 'teacher' if self.is_teacher else ('student' if self.is_student else None)
+        print(role)
+        return role
+
     def __str__(self) -> str:
         return self.full_name
 
