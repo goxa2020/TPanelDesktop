@@ -1,15 +1,33 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
-
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 class User(AbstractUser):
-    username = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    image = models.ImageField(upload_to="user_images", default=False)
-    birthday = models.DateField(blank=True, null=True)
-
-    verified = models.BooleanField(default=False)
+    username = models.CharField(
+        max_length=100,
+        help_text=_("Имя пользователя для отображения в системе")
+    )
+    email = models.EmailField(
+        unique=True,
+        db_index=True,
+        help_text=_("Email пользователя, используется для входа")
+    )
+    image = models.ImageField(
+        upload_to="media/user_images",
+        default=False,
+        help_text=_("Фотография профиля пользователя")
+    )
+    birthday = models.DateField(
+        blank=True,
+        null=True,
+        help_text=_("Дата рождения пользователя")
+    )
+    verified = models.BooleanField(
+        default=False,
+        help_text=_("Статус верификации пользователя")
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -52,7 +70,12 @@ class Student(User):
 
 
 class Teacher(User):
-    teacher_achievements = models.CharField(max_length=150, blank=True, null=True)
+    teacher_achievements = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        help_text=_("Достижения и награды учителя")
+    )
 
     class Meta:
         verbose_name = _("учитель")
@@ -60,9 +83,23 @@ class Teacher(User):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=150)
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='projects')
-    students = models.ManyToManyField(Student, related_name='projects', blank=True)
+    name = models.CharField(
+        max_length=150,
+        help_text=_("Название проекта")
+    )
+    teacher = models.ForeignKey(
+        Teacher,
+        on_delete=models.CASCADE,
+        related_name='projects',
+        db_index=True,
+        help_text=_("Учитель, ведущий проект")
+    )
+    students = models.ManyToManyField(
+        Student,
+        related_name='projects',
+        blank=True,
+        help_text=_("Ученики, участвующие в проекте")
+    )
 
     class Meta:
         verbose_name = _("проект")
@@ -73,16 +110,64 @@ class Project(models.Model):
 
 
 class Task(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
-    name = models.CharField(max_length=150, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
-    created = models.DateField(auto_now_add=True)
-    deadline = models.DateField(blank=True, null=True)
-    done = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        related_name='tasks',
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text=_("Проект, к которому относится задача")
+    )
+    name = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        help_text=_("Название задачи")
+    )
+    description = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_("Описание задачи")
+    )
+    deadline = models.DateField(
+        blank=True,
+        null=True,
+        help_text=_("Крайний срок выполнения задачи")
+    )
+    done = models.BooleanField(
+        default=False,
+        help_text=_("Статус выполнения задачи")
+    )
+    overdue = models.BooleanField(
+        default=False,
+        help_text=_("Задача просрочена")
+    )
 
     class Meta:
         verbose_name = _("Задача")
         verbose_name_plural = _("Задачи")
+
+    def clean(self):
+        # При создании нельзя установить дедлайн в прошлом
+        if not self.pk and self.deadline and self.deadline < timezone.now().date():
+            raise ValidationError(_("Дедлайн не может быть раньше текущей даты"))
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        
+        # Обновляем статус просрочки
+        if self.deadline and self.deadline < timezone.now().date() and not self.done:
+            self.overdue = True
+        
+        # Если задача выполнена, снимаем просрочку
+        if self.done:
+            self.overdue = False
+            
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.id}: {self.name}'
