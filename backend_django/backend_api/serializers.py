@@ -14,17 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(UserSerializer):
-    class Meta:
+    class Meta(UserSerializer.Meta):
         model = Student
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'full_name', 'birthday',
-                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'role', 'student_group')
+        fields = UserSerializer.Meta.fields + ('student_group',)
 
 
 class TeacherSerializer(UserSerializer):
-    class Meta:
+    class Meta(UserSerializer.Meta):
         model = Teacher
-        fields = ('id', 'username', 'email', 'first_name', 'last_name', 'full_name', 'birthday',
-                  'verified', 'image', 'is_staff', 'is_student', 'is_teacher', 'role', 'teacher_achievements')
+        fields = UserSerializer.Meta.fields + ('teacher_achievements',)
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -32,7 +30,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user: User):
         token = super().get_token(user)
 
-        # These are claims, you can add custom claims
+        # Базовые поля пользователя
         token['full_name'] = user.full_name
         token['username'] = user.username
         token['email'] = user.email
@@ -40,13 +38,16 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['birthday'] = str(user.birthday)
         token['verified'] = user.verified
         token['is_staff'] = user.is_staff
-        # ...
         token['is_student'] = user.is_student
         token['is_teacher'] = user.is_teacher
+
+        # Оптимизированные запросы для дополнительных данных
         if user.is_student:
-            token['student_group'] = Student.objects.filter(id=user.id).first().student_group
+            student = Student.objects.get(id=user.id)
+            token['student_group'] = student.student_group
         if user.is_teacher:
-            token['teacher_achievements'] = Teacher.objects.filter(id=user.id).first().teacher_achievements
+            teacher = Teacher.objects.get(id=user.id)
+            token['teacher_achievements'] = teacher.teacher_achievements
 
         return token
 
@@ -64,11 +65,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
+                {"password": "Пароли не совпадают"}
             )
 
         return attrs
-
+    
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
@@ -90,13 +91,20 @@ class TaskSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
-    queryset = Project.objects.all()
-    # teacher = TeacherSerializer(read_only=True)
-    teacher = serializers.SlugRelatedField(slug_field='id', queryset=Teacher.objects)
-    students = serializers.SlugRelatedField(slug_field='id', queryset=Student.objects, many=True, read_only=False)
-    # students = StudentSerializer(many=True)
-    # tasks = TaskSerializer(many=True)
-    tasks = serializers.SlugRelatedField(slug_field='id', queryset=Task.objects, many=True, read_only=False)
+    teacher = serializers.SlugRelatedField(
+        slug_field='id', 
+        queryset=Teacher.objects
+    )
+    students = serializers.SlugRelatedField(
+        slug_field='id', 
+        queryset=Student.objects, 
+        many=True
+    )
+    tasks = serializers.SlugRelatedField(
+        slug_field='id', 
+        queryset=Task.objects, 
+        many=True
+    )
 
     class Meta:
         model = Project
