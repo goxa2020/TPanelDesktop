@@ -13,6 +13,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 import dotenv
+from .redis_settings import CACHES, SESSION_ENGINE, SESSION_CACHE_ALIAS, CACHE_TTL
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -122,7 +123,7 @@ AUTH_USER_MODEL = 'backend_api.User'
 SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "backend_api.serializers.MyTokenObtainPairSerializer",
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,

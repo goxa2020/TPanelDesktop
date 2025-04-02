@@ -20,6 +20,9 @@ pyjwt = "2.8.0"
 sqlparse = "0.4.4"
 tzdata = "2024.1"
 python-dotenv = "^1.1.0"
+django-redis = "^5.4.0"
+redis = "^5.0.1"
+hiredis = "^2.3.2"
 
 
 [build-system]

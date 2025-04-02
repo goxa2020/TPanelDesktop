@@ -12,7 +12,10 @@ class User(AbstractUser):
     email = models.EmailField(
         unique=True,
         db_index=True,
-        help_text=_("Email пользователя, используется для входа")
+        help_text=_("Email пользователя, используется для входа"),
+        error_messages={
+            'unique': "Пользователь с таким email уже существует"
+        }
     )
     image = models.ImageField(
         upload_to="media/user_images",
@@ -54,7 +57,6 @@ class User(AbstractUser):
     @property
     def role(self):
         role = 'teacher' if self.is_teacher else ('student' if self.is_student else None)
-        print(role)
         return role
 
     def __str__(self) -> str:
